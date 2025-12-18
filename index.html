@@ -282,7 +282,10 @@
     </script>
 </head>
 <body>
-
+<audio id="bg-music" loop preload="auto">
+    <source src="/audio.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
     <div id="loader">
         <div class="spinner"></div>
         <div class="loader-text">Loading Memories</div>
@@ -361,6 +364,21 @@
     <div id="debug-info">Drag to rotate • Tap photo to view</div>
 
     <script type="module">
+const bgMusic = document.getElementById('bg-music');
+
+function forcePlayMusic() {
+    bgMusic.volume = 0.4;
+    bgMusic.play().catch(() => {});
+    window.removeEventListener('pointerdown', forcePlayMusic);
+    window.removeEventListener('touchstart', forcePlayMusic);
+    window.removeEventListener('keydown', forcePlayMusic);
+}
+
+window.addEventListener('pointerdown', forcePlayMusic, { once: true });
+window.addEventListener('touchstart', forcePlayMusic, { once: true });
+window.addEventListener('keydown', forcePlayMusic, { once: true });
+
+
         import * as THREE from 'three';
         import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
         import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
@@ -1035,7 +1053,90 @@
 //   - @Description: 3D Christmas tree with AI Gestures + Touch + Traffic Analytics.
 //   - @Style: Luxury Dashboard UI (Hidden by default, toggle with 'S')
 // --> 
-        init();
+        const startBtn = document.getElementById('start-btn');
+const startScreen = document.getElementById('start-screen');
+const loader = document.getElementById('loader');
+// const bgMusic = document.getElementById('bg-music');
+
+// Ẩn loader ban đầu
+loader.style.display = 'none';
+
+startBtn.addEventListener('click', async () => {
+
+    // 🎵 bật nhạc (KHÔNG bị chặn)
+    bgMusic.volume = 0.4;
+    bgMusic.play().catch(() => {});
+
+    // Ẩn START
+    startScreen.style.opacity = 0;
+    setTimeout(() => startScreen.remove(), 600);
+
+    // Hiện loader
+    loader.style.display = 'flex';
+    loader.style.opacity = 1;
+
+    // Init Three.js
+    await init();
+
+});
+
     </script>
 </body>
+<style>
+    #start-screen {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at center, #0f2027, #050d1a);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.start-content {
+    text-align: center;
+    color: #d4af37;
+}
+
+.start-title {
+    font-family: 'Cinzel', serif;
+    font-size: 32px;
+    letter-spacing: 4px;
+    margin-bottom: 40px;
+    text-shadow: 0 0 30px rgba(212,175,55,0.5);
+}
+
+#start-btn {
+    background: transparent;
+    border: 1px solid #d4af37;
+    color: #d4af37;
+    padding: 14px 36px;
+    font-size: 12px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+}
+
+#start-btn:hover {
+    background: #d4af37;
+    color: #000;
+    box-shadow: 0 0 30px rgba(212,175,55,0.8);
+}
+
+.start-hint {
+    margin-top: 20px;
+    font-size: 10px;
+    letter-spacing: 2px;
+    opacity: 0.6;
+}
+
+</style>
+<div id="start-screen">
+    <div class="start-content">
+        <div class="start-title">HI CHÀO CẬU</div>
+        <button id="start-btn">CLICK VÀO ĐÂY!</button>
+        <div class="start-hint">Đừng quên đeo tai nghe nhé!</div>
+    </div>
+</div>
+
 </html>
