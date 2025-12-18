@@ -172,6 +172,13 @@
             }
         };
 
+        const PRELOAD_IMAGES = [
+  '/a1.png',
+  '/a2.png',
+  '/a3.png',
+  '/a4.png'
+];
+
         const STATE = {
             mode: 'TREE', 
             focusIndex: -1, 
@@ -196,6 +203,7 @@
             createParticles(); 
             createDust();     
             createDefaultPhotos();
+            preloadImages(PRELOAD_IMAGES);
             setupPostProcessing();
             setupEvents();
             await initMediaPipe();
@@ -484,6 +492,22 @@
             tex.colorSpace = THREE.SRGBColorSpace;
             addPhotoToScene(tex);
         }
+
+        function preloadImages(imageUrls) {
+    const loader = new THREE.TextureLoader();
+    imageUrls.forEach(url => {
+        loader.load(
+            url,
+            (texture) => {
+                texture.colorSpace = THREE.SRGBColorSpace;
+                addPhotoToScene(texture);
+            },
+            undefined,
+            (err) => console.warn('Load failed:', url, err)
+        );
+    });
+}
+
 
         function addPhotoToScene(texture) {
             const frameGeo = new THREE.BoxGeometry(1.4, 1.4, 0.05);
