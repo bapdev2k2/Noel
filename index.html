@@ -373,6 +373,10 @@ function forcePlayMusic() {
     window.removeEventListener('touchstart', forcePlayMusic);
     window.removeEventListener('keydown', forcePlayMusic);
 }
+document.body.addEventListener('click', () => {
+  bgMusic.volume = 0.4;
+  bgMusic.play().catch(() => {});
+}, { once: true });
 
 window.addEventListener('pointerdown', forcePlayMusic, { once: true });
 window.addEventListener('touchstart', forcePlayMusic, { once: true });
